@@ -6,10 +6,15 @@ import pandas as pd
 import requests
 from statsmodels.stats.proportion import proportions_ztest
  
-SRC, TOKENS_OUT = "bigdata/posts.xlsx", "bigdata/posts_tokenized_frames.xlsx"
-TABLE_OUT, FIG_OUT = "bigdata/frames_simple.xlsx", "bigdata/frames_simple.png"
-STOP_PATH = Path("stopwords-zh.json")
-CUTOFF = "2026-04-10"                      # rules issued: before = earlier, after = this day onward
+TIEBA = Path(__file__).resolve().parents[1]
+DATA, FIGURES = TIEBA / "data", TIEBA / "figures"
+for folder in (DATA, FIGURES):
+    folder.mkdir(parents=True, exist_ok=True)
+ 
+SRC, TOKENS_OUT = DATA / "posts.xlsx", DATA / "posts_tokenized_frames.xlsx"
+TABLE_OUT, FIG_OUT = DATA / "frames_test.xlsx", FIGURES / "frames_test.png"
+STOP_PATH = DATA / "stopwords-zh.json"
+CUTOFF = "2026-04-10"                    # rules issued: before = earlier, after = this day onward
  
 # ---------- the four frames (seed words) ----------
 FRAMES = {
