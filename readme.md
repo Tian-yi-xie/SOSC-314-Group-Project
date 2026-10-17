@@ -16,7 +16,7 @@ How Chinese social media users talk about their relationships with AI companions
 
 ## Overview
 
-Chinese news coverage of AI companions, and the rules issued on 10 April 2026, mostly treat these apps as emotionally harmful: users become dependent, replace human relationships, or suffer when an app changes. From this coverage and the literature we built four relational frames:
+Chinese news coverage of AI companions, and the rules issued on 10 April 2026, mostly treat these apps as emotionally harmful: users become dependent, replace human relationships, or suffer when an app changes. From this coverage and the literature, we built four relational frames:
 
 | Frame | Example seed words |
 |---|---|
@@ -95,11 +95,3 @@ Details and results are in the final report.
 - The post-policy period is short, limiting analysis of longer-term effects. Other events and platform changes may also shape discussions, so we cannot attribute before-and-after differences to the rules alone.
 - Clustering results and theme labels depend on model settings and researcher interpretation; the nine-theme structure is an analytical choice, not an objective ground truth.
 - We can only measure how relationships with AI are talked about, not users' psychological states.
-
----
-
-## Generative AI disclosure
-
-[To be added - key literature on AI companionship, framing analysis, and Chinese social media research]
-
-
