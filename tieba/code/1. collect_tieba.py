@@ -17,13 +17,18 @@ GENERAL_BARS = ["豆包", "deepseek", "智能体", "minimax"]
 TARGET_BARS = COMPANION_BARS + GENERAL_BARS
 PAGES, MAX_THREADS, MIN_CHARS, SCROLLS = 10, 3000, 5, 15
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36'
+BAIDUID = os.environ.get("TIEBA_BAIDUID", "")    # your own Baidu login cookies
+BDUSS = os.environ.get("TIEBA_BDUSS", "")
+STOKEN = os.environ.get("TIEBA_STOKEN", "")
 SALT = os.environ.get("TIEBA_SALT", "")          # private salt for hashing author IDs
-RAW_DIR = Path("bigdata/raw_threads")
+DATA = Path(__file__).resolve().parents[1] / "data"     # tieba/data/
+RAW_DIR = DATA / "raw_threads"
 RAW_DIR.mkdir(parents=True, exist_ok=True)
-INDEX_XLSX = "bigdata/thread_index.xlsx"
-POSTS_XLSX = "bigdata/posts.xlsx"
- 
+INDEX_XLSX = DATA / "thread_index.xlsx"
+POSTS_XLSX = DATA / "posts.xlsx"
+
 # ---------- which titles count as AI companion ----------
+
 COMPANION_TERMS = ["ai伴侣", "ai男友", "ai女友", "ai老公", "ai老婆", "ai恋人", "ai对象",
                    "虚拟恋人", "虚拟男友", "虚拟女友", "电子男友", "电子女友", "赛博恋人",
                    "人机恋", "赛博恋爱", "ai陪伴", "情感陪伴", "陪聊", "角色扮演", "纸片人"]
@@ -81,7 +86,6 @@ print("settings ok")
 # ============================================================
 from concurrent.futures import ThreadPoolExecutor
  
-SCROLLS = 15 
 HEADLESS = False        # False = see the Chrome window (and can solve a captcha if one appears)
  
 def pick_threads(data, keyword, out, stats):
@@ -144,7 +148,7 @@ def browser_search(keywords):
             print(f"search {keyword}: {len(found) - before} threads "
                   f"({stats['responses']} data responses, {stats['candidates']} candidates)")
         browser.close()
-    Path("bigdata/search_debug.json").write_text(json.dumps(samples, ensure_ascii=False)[:2_000_000], encoding="utf-8")
+    (DATA / "search_debug.json").write_text(json.dumps(samples, ensure_ascii=False)[:2_000_000], encoding="utf-8")
     return found
  
 def bar_page(bar, page):
@@ -207,28 +211,6 @@ def scrape_thread(thread):
         pause()
     return records
  
-# ---------- find threads (saved list is reused; delete thread_index.xlsx to search again) ----------
-if Path(INDEX_XLSX).exists():
-    index = pd.read_excel(INDEX_XLSX, dtype={"thread_id": str}).fillna("")
-    print(f"Using saved {INDEX_XLSX} -- NO new search. Delete that file to search again.")
-else:
-    with ThreadPoolExecutor() as pool:                    # Playwright runs in its own thread
-        found = pool.submit(browser_search, SEARCH_KEYWORDS).result() if SEARCH_KEYWORDS else []
-    for bar in TARGET_BARS:
-        before = len(found)
-        for page in range(1, PAGES + 1):
-            try:
-                threads = bar_page(bar, page)
-            except Exception as error:
-                print(f"bar {bar} page {page}: {error}")
-                break
-            if not threads:
-                break
-            found += threads
-            pause()
-        print(f"bar {bar}: {len(found) - before} threads")
-    index = pd.DataFrame(found)
- 
 # ---------- screen ----------
 # search results: keyword is in the post -> keep (unless spam) | bar threads: companion bar or companion title
 if "source" not in index:
@@ -237,7 +219,6 @@ spam = index["title"].str.lower().map(lambda t: any(w in t for w in EXCLUDE_TERM
 index["include"] = [int(s == "search") or is_companion(t, str(b).removesuffix("吧"))
                     for s, t, b in zip(index["source"], index["title"], index["bar"])]
 index.loc[spam, "include"] = 0
-index.loc[(index["date"] != "") & (index["date"] < START_DATE), "include"] = 0
 index = index.sort_values("include", ascending=False).drop_duplicates("thread_id")
 index.to_excel(INDEX_XLSX, index=False)
 print(f"\nAI-companion threads: {index['include'].sum():,} of {len(index):,} "
@@ -268,7 +249,7 @@ for i, thread in enumerate(todo.to_dict("records"), 1):
 # ---------- combine + clean ----------
 def clean_text(text):
     text = re.sub(r"^回复\s*[^:：]{0,30}[:：]", "", str(text))
-    text = re.sub(r"[^一-鿿A-Za-z\s]", "", text)
+    text = re.sub(r"[^\u4e00-\u9fffA-Za-z\s]", "", text)
     return re.sub(r"\s+", " ", text).strip()
  
 keep = set(todo["thread_id"])
