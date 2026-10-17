@@ -2,7 +2,8 @@
 
 How Chinese social media users talk about their relationships with AI companions on Baidu Tieba and Bilibili.
 
-**Course:** SOSC-314 - Computational Social Science
+**Course:** SOSC314 - Computational Social Science
+
 **Term:** Fall, 2026
 
 | Team member | Contribution |
