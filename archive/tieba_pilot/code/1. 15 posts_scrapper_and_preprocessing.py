@@ -5,24 +5,21 @@ Scrape 15 hand-picked Tieba threads and prepare the posts for analysis.
   2. Clean: keep Chinese characters only, drop posts shorter than MIN_CHARS.
   3. Tokenize with jieba, remove stopwords and one-character words.
 Input:  Tieba (live)
-Output: archive/tieba_pilot/data/raw_threads/, tieba_posts.xlsx
-
+Output: archive/tieba_pilot/data/tieba_posts.xls
 """
 import hashlib
 import json
 import random
 import re
 import time
-from pathlib import Path
- 
+from pathlib import Path 
 import jieba
 import pandas as pd
 import requests
  
 # ---------- folders (relative to the archive/tieba_pilot/ folder of the repository) ----------
 DATA = Path(__file__).resolve().parents[1] / "data"
-RAW_DIR = DATA / "raw_threads"
-RAW_DIR.mkdir(parents=True, exist_ok=True)
+DATA.mkdir(parents=True, exist_ok=True)
 OUT = DATA / "tieba_posts.xlsx"
  
 # ---------- settings ----------
@@ -78,18 +75,16 @@ def scrape_thread(tid):
         time.sleep(random.uniform(0.5, 1.2))
     return records
  
+records = []
 for tid in THREADS:
-    path = RAW_DIR / f"thread_{tid}.csv"
-    if path.exists():                                   # already scraped
-        continue
-    records = scrape_thread(tid)
-    pd.DataFrame(records).to_csv(path, index=False, encoding="utf-8-sig")
-    print(f"{tid}: {len(records):,} posts")
+    thread = scrape_thread(tid)
+    print(f"{tid}: {len(thread):,} posts")
+    records += thread
  
 # ============================================================
 # 2-3. CLEAN AND TOKENIZE
 # ============================================================
-df = pd.concat([pd.read_csv(p, dtype={"thread_id": str}) for p in RAW_DIR.glob("thread_*.csv")], ignore_index=True)
+df = pd.DataFrame(records)
 n_raw = len(df)
 df["clean"] = df["text"].fillna("").map(lambda t: re.sub(r"[^一-鿿]", "", str(t)))   # Chinese only
 df = df[df["clean"].str.len() >= MIN_CHARS]
