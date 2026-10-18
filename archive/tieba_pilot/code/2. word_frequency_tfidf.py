@@ -8,16 +8,13 @@ Words in fewer than 2 posts or in more than 80% of posts are left out.
 # ============================================================
 # WORD FREQUENCY + TF-IDF ANALYSIS
 # ============================================================
- 
 from pathlib import Path
 import jieba
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
  
-# ---------- folders (relative to the archive/tieba_pilot/ folder of the repository) ----------
 DATA = Path(__file__).resolve().parents[1] / "data"
 texts = pd.read_excel(DATA / "tieba_posts.xlsx", sheet_name="posts")["tokens_joined"].astype(str)
-OUTPUT_XLSX = Path("tieba_clean/word_frequency_tfidf.xlsx")
  
 # ---------- load cleaned posts ----------
  
