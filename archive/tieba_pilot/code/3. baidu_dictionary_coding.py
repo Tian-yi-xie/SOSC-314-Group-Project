@@ -28,7 +28,9 @@ LABELS = {
     "D2_Emotional_Substitution": "D2 Emotional substitution",
     "D3_Playful_Performance": "D3 Playful performance",
     "D4_Dangerous_Dependence": "D4 Dangerous dependence",}
- 
+
+DIMS = list(D_CODES)
+
 # ============================================================
 # 1. CODE POSTS
 # ============================================================
@@ -48,6 +50,7 @@ one[["thread_id", "text", "clean", "dimension"] + DIMS].to_excel(DATA / "one_dim
 # 3. POSTS MATCHING TWO OR MORE FRAMES (dominant = most keywords matched; ties listed together)
 # ============================================================
 multi = df[df["n_dimensions"] >= 2].copy()
+multi = df[df["n_dimensions"] >= 2].copy()
 counts = pd.DataFrame({dim: multi[dim + "_terms"].str.len() for dim in DIMS})
 multi["dominant_dimension"] = [" | ".join(LABELS[d] for d in DIMS if row[d] == row.max())
                                for _, row in counts.iterrows()]
@@ -55,3 +58,4 @@ multi[["thread_id", "text", "clean"] + DIMS + ["dominant_dimension"]].to_excel(
     DATA / "two_plus_dimension_posts.xlsx", index=False)
  
 print(f"Posts: {len(df):,} | one frame: {len(one):,} | two or more frames: {len(multi):,}")
+print("Saved one_dimension_posts.xlsx and two_plus_dimension_posts.xlsx")
