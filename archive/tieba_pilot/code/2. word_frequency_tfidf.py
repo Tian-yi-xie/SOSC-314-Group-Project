@@ -24,9 +24,7 @@ OUTPUT_XLSX = Path("tieba_clean/word_frequency_tfidf.xlsx")
 # ---------- load cleaned posts ----------
  
 df = pd.read_excel(INPUT_XLSX, sheet_name="posts")
- 
 texts = df["tokens_joined"].astype(str).tolist()
- 
 print(f"Analyzing {len(texts)} posts...\n")
  
 # ---------- chinese tokenizer ----------
