@@ -2,16 +2,14 @@
 baidu_dictionary_coding.py  (pilot, not used in the final analysis)
 Code each pilot post on the four frames with a first keyword list (D1-D4).
 A post has a frame if its cleaned text contains any of the frame's keywords (multi-label).
- 
   1. Code every post on the four frames and count how many frames it matches.
   2. Posts matching exactly one frame.
   3. Posts matching two or more frames, with their dominant frame (most keywords matched).
- 
 Many of these keywords turned out to be too general (e.g. 真的, 没有, 东西), which is why the final
 analysis uses the refined seed dictionary in dictionaries/.
- 
 Input:  archive/tieba_pilot/data/tieba_posts.xlsx                       (from scraper_and_preprocessing.py)
 Output: archive/tieba_pilot/data/one_dimension_posts.xlsx, two_plus_dimension_posts.xlsx
+
 """
 
 from pathlib import Path
@@ -31,7 +29,6 @@ LABELS = {
     "D2_Emotional_Substitution": "D2 Emotional substitution",
     "D3_Playful_Performance": "D3 Playful performance",
     "D4_Dangerous_Dependence": "D4 Dangerous dependence",}
- 
  
 # ============================================================
 # 1. CODE POSTS
