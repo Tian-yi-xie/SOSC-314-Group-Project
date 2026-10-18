@@ -4,7 +4,6 @@ Find the most common and the most distinctive words in the pilot posts.
   1. Count each word (total count and number of posts it appears in) and its mean TF-IDF.
   2. Top 50 words by count and top 50 by mean TF-IDF.
 Words in fewer than 2 posts or in more than 80% of posts are left out.
-
 """
 # ============================================================
 # WORD FREQUENCY + TF-IDF ANALYSIS
@@ -17,7 +16,6 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
  
 # ---------- folders (relative to the archive/tieba_pilot/ folder of the repository) ----------
 DATA = Path(__file__).resolve().parents[1] / "data"
- 
 texts = pd.read_excel(DATA / "tieba_posts.xlsx", sheet_name="posts")["tokens_joined"].astype(str)
 OUTPUT_XLSX = Path("tieba_clean/word_frequency_tfidf.xlsx")
  
@@ -94,6 +92,5 @@ with pd.ExcelWriter(DATA / "word_frequency_tfidf.xlsx") as writer:
     top("tf_idf").to_excel(writer, sheet_name="top_50_tfidf", index=False)
     words.to_excel(writer, sheet_name="vocabulary", index=False)
  
-print(f"\nSaved to: {OUTPUT_XLSX}")
-print("  - top_50_words: frequency + TF-IDF together")
-print("  - top_50_tfidf: highest TF-IDF words")
+print(f"Posts: {len(texts):,} | words kept: {len(words):,}")
+print(top("count")[["rank", "word", "count", "tf_idf"]].head(20).to_string(index=False))
