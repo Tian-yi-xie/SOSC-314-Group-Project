@@ -9,11 +9,20 @@ import numpy as np
 import pandas as pd
 from matplotlib.colors import to_rgba
 from sklearn.feature_extraction.text import CountVectorizer
-from utils import load_stopwords
+# [FIX] stopword loader built in (was "from utils import load_stopwords"; utils.py is not in the repo)
+import json
+import requests
+
+def load_stopwords(path=Path(__file__).resolve().parents[1] / "data" / "stopwords-zh.json"):
+    """Chinese stopword list (stopwords-iso). Downloaded once, then read from tieba/data/."""
+    if not path.exists():
+        url = "https://raw.githubusercontent.com/stopwords-iso/stopwords-zh/master/stopwords-zh.json"
+        path.write_text(json.dumps(requests.get(url, timeout=30).json(), ensure_ascii=False), encoding="utf-8")
+    return set(json.loads(path.read_text(encoding="utf-8")))
  
 # ---------- folders (relative to the tieba/ folder of the repository) ----------
 TIEBA = Path(__file__).resolve().parents[1]
-DATA, FIGURES = TIEBA / "data", TIEBA / "figures"
+DATA, FIGURES = TIEBA / "data", TIEBA / "figure"   # [FIX] repo folder is tieba/figure/
 FW_DIR = FIGURES / "fightin_words"
 FW_DIR.mkdir(parents=True, exist_ok=True)
 plt.rcParams["font.sans-serif"] = ["Arial Unicode MS", "PingFang SC", "Noto Sans CJK SC", "SimHei"]
