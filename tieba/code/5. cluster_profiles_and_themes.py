@@ -1,6 +1,5 @@
 from collections import Counter
 from pathlib import Path
- 
 import jieba
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,11 +7,20 @@ import pandas as pd
 from scipy.cluster.hierarchy import fcluster, leaves_list, linkage
 from sklearn.metrics.pairwise import cosine_similarity
  
-from utils import load_stopwords
+# [FIX] stopword loader built in
+import json
+import requests
+
+def load_stopwords(path=Path(__file__).resolve().parents[1] / "data" / "stopwords-zh.json"):
+    """Chinese stopword list (stopwords-iso). Downloaded once, then read from tieba/data/."""
+    if not path.exists():
+        url = "https://raw.githubusercontent.com/stopwords-iso/stopwords-zh/master/stopwords-zh.json"
+        path.write_text(json.dumps(requests.get(url, timeout=30).json(), ensure_ascii=False), encoding="utf-8")
+    return set(json.loads(path.read_text(encoding="utf-8")))
  
 # ---------- folders (relative to the tieba/ folder of the repository) ----------
 TIEBA = Path(__file__).resolve().parents[1]
-DATA, FIGURES = TIEBA / "data", TIEBA / "figures"
+DATA, FIGURES = TIEBA / "data", TIEBA / "figure"   # [FIX] repo folder is tieba/figure/
 FIGURES.mkdir(parents=True, exist_ok=True)
 PROFILES = DATA / "cluster_profiles.xlsx"
  
