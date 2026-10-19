@@ -74,7 +74,7 @@ Details and results are in the final report.
 ```
 ├── README.md
 ├── index.html                              final report, served as the project website by GitHub Pages
-├── final_project_report_submission.ipynb   notebook the report is built from
+├── method.jpg                              diagram of the methods pipeline, shown in the report
 ├── requirements.txt                        Python packages needed to run the code
 ├── docs/                                   Project documentation, AI-use record
 ├── dictionaries/                           frame seed words
