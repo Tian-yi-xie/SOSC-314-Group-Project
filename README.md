@@ -79,14 +79,16 @@ Details and results are in the final report.
 ├── tieba/
 │   ├── code/                               
 │   ├── data/                               
-│   └── figures/
+│   └── figure/
 ├── bilibili/
 │   ├── code/
 │   ├── data/
-│   └── figures/
+│   └── figure/
 └── archive/
-    ├── tieba_pilot/                        early 15-thread pilot: dictionary coding, LDA, first clustering
-    └── frame_classifier_draft/             supervised classifier draft, not used in the final analysis
+    └── tieba_pilot/                        early 15-thread pilot: scraping, word frequency / TF-IDF, dictionary coding
+        ├── code/
+        ├── data/
+        └── figure/
 ```
 ---
 
