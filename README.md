@@ -2,8 +2,6 @@
 
 A computational social science project analyzing how Chinese social media users talk about their relationships with AI companions on Baidu Tieba and Bilibili, and how this conversation shifted with technology releases, platform changes, and regulation from 2023 to 2026.
 
-**Final report:** https://tian-yi-xie.github.io/SOSC-314-Group-Project/report/index.html
-
 **Course:** SOSC314 - Computational Social Science
 
 **Term:** Fall, 2026
