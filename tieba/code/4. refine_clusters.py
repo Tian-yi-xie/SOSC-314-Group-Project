@@ -6,7 +6,7 @@ from sklearn.neighbors import NearestNeighbors
  
 # ---------- folders (relative to the tieba/ folder of the repository) ----------
 TIEBA = Path(__file__).resolve().parents[1]
-DATA, FIGURES = TIEBA / "data", TIEBA / "figures"
+DATA, FIGURES = TIEBA / "data", TIEBA / "figure"
 for folder in (DATA, FIGURES):
     folder.mkdir(parents=True, exist_ok=True)
  
