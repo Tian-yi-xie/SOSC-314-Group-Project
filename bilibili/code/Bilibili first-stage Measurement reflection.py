@@ -1,3 +1,8 @@
+# ---------- [PATH CHANGE] paths: point to the folders in our repository instead of Colab's /content/ ----------
+from pathlib import Path
+BILI = Path(__file__).resolve().parents[1] if "__file__" in globals() else (Path.cwd() / "bilibili").resolve()
+DATA, FIG = BILI / "data", BILI / "figure"
+
 #Figure 1 presented the distribution of the four framing dimensions:
 #Playful Performance was the most frequent (26.0%), followed by Genuine Attachment (15.0%), Dangerous Dependence (5.8%), and Emotional Substitution (4.8%). 
 #Together, the four dimensions covered only 51.6% of the corpus, which raised a follow-up question: where did the remaining comments go?
@@ -6,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Use the clean labeled file
-df = pd.read_csv('/content/bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_labeled_clean.csv'
 print(f"Total comments: {len(df)}")
 
 dims = ['genuine_attachment', 'emotional_substitution',
@@ -30,13 +35,13 @@ for bar, count in zip(bars, combo_counts.values):
             str(count), ha='center', fontsize=11)
 
 plt.tight_layout()
-plt.savefig('/content/fig2_dimension_count.png', dpi=300)
+plt.savefig(FIG / 'fig2_dimension_count.png', dpi=300)   # [PATH CHANGE] was '/content/fig2_dimension_count.png'
 plt.show()
 
 *Overview dimension data*
 import pandas as pd
 
-df = pd.read_csv('/content/bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_labeled_clean.csv'
 dims = ['genuine_attachment', 'emotional_substitution',
         'playful_performance', 'dangerous_dependence']
 df['n_dims'] = df[dims].sum(axis=1)
@@ -65,7 +70,7 @@ for c in df[df['n_dims'] == 2]['content'].sample(15, random_state=42).tolist():
 *Check 0 dimesion data*
 import pandas as pd
 
-df = pd.read_csv('/content/bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_labeled_clean.csv'
 dims = ['genuine_attachment', 'emotional_substitution',
         'playful_performance', 'dangerous_dependence']
 df['n_dims'] = df[dims].sum(axis=1)
@@ -90,7 +95,7 @@ for c in philosophy_hits['content'].head(10).tolist():
 *Look at missing data*
 import pandas as pd
 
-df = pd.read_csv('/content/bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_labeled_clean.csv'
 dims = ['genuine_attachment', 'emotional_substitution',
         'playful_performance', 'dangerous_dependence']
 df['n_dims'] = df[dims].sum(axis=1)
