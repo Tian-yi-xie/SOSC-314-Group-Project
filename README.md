@@ -6,6 +6,8 @@ A computational social science project analyzing how Chinese social media users 
 
 **Term:** Fall, 2026
 
+**Link to our site:** https://tian-yi-xie.github.io/SOSC-314-Group-Project/report/index.html
+
 | Team member | Contribution |
 |---|---|
 | My Thuan Dang | Baidu Tieba: Data collection and preprocessing; frame analysis; semantic clustering and theme development; analysis of thematic and linguistic trends over time in policy context; repository maintenance |
