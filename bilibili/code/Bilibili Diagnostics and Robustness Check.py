@@ -1,3 +1,11 @@
+# ---------- [PATH CHANGE] paths: point to the folders in our repository instead of Colab's /content/ ----------
+# Run from the repository root (in Colab: clone our repo first, then %cd into it).
+from pathlib import Path
+BILI = Path(__file__).resolve().parents[1] if "__file__" in globals() else (Path.cwd() / "bilibili").resolve()
+ROOT = BILI.parent                                   # repository root
+DATA, FIG, DICT = BILI / "data", BILI / "figure", ROOT / "dictionaries"
+# ---------- [END PATH CHANGE] ----------
+
 #Diagnose of two dimensions from comparison results
 import pandas as pd
 import jieba
@@ -5,7 +13,7 @@ import re
 from sklearn.feature_extraction.text import CountVectorizer
 
 # Load data
-df = pd.read_csv('/content/bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_labeled_clean.csv'
 print(f"Loaded: {len(df)} comments")
 print(f"Columns: {df.columns.tolist()}")
 
@@ -112,7 +120,7 @@ for i, v in enumerate(dang_diffs[::-1]):
     axes[1].text(v + 0.005, i, f'{v:.3f}', va='center', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('/content/fig_robustness_top_words.png', dpi=300)
+plt.savefig(FIG / 'data_dignose' / 'fig_robustness_top_words (1).png', dpi=300)   # [PATH CHANGE] saves into the existing figure folder/file name in the repo
 plt.show()
 
 #New Dictionary
@@ -120,7 +128,7 @@ import os
 import pandas as pd
 
 # 1. Create directory
-os.makedirs('dictionaries', exist_ok=True)
+os.makedirs(DICT, exist_ok=True)   # [PATH CHANGE] was 'dictionaries'
 
 # 2. Refined dictionary
 # Removed broad words: 没有, 帮助, 意义, 陪伴, 开心, 任何事
@@ -154,7 +162,7 @@ data = {
 
 # 3. Save
 df = pd.DataFrame(data)
-df.to_csv('dictionaries/seed2.csv', index=False, encoding='utf-8-sig')
+df.to_csv(DICT / 'seed2.csv', index=False, encoding='utf-8-sig')   # [PATH CHANGE] was 'dictionaries/seed2.csv'
 
 print(f"Total keywords: {len(df)}")
 print(df.groupby('dimension')['keyword'].apply(list))
@@ -168,7 +176,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 
 # Load data
-df = pd.read_csv('/content/bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_labeled_clean.csv'
 print(f"Loaded: {len(df)} comments")
 
 # Tokenize (if missing)
@@ -193,11 +201,11 @@ if 'tokens' not in df.columns:
     print("Tokens column created.")
 
 # Save tokens version for future use
-df.to_csv('/content/bilibili_comments_with_tokens.csv', index=False, encoding='utf-8-sig')
+df.to_csv(DATA / 'bilibili_comments_with_tokens.csv', index=False, encoding='utf-8-sig')   # [PATH CHANGE] was '/content/bilibili_comments_with_tokens.csv'
 print("Saved with tokens.")
 
 #  Re-label with refined dictionary (seed2.csv)
-dictionary = pd.read_csv('dictionaries/seed2.csv')
+dictionary = pd.read_csv(DICT / 'seed2.csv')   # [PATH CHANGE] was 'dictionaries/seed2.csv'
 dims = dictionary.groupby('dimension')['keyword'].apply(list).to_dict()
 
 for dim, words in dims.items():
@@ -267,12 +275,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 
 # Load
-df = pd.read_csv('/content/bilibili_comments_with_tokens.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_with_tokens.csv')   # [PATH CHANGE] was '/content/bilibili_comments_with_tokens.csv'
 df['tokens'] = df['tokens'].fillna('')
 
 # Load both dictionaries
-old_dict = pd.read_csv('/content/dictionaries/seed.csv')
-new_dict = pd.read_csv('/content/bilibili_comment_scraper_webui/dictionaries/seed2.csv')
+old_dict = pd.read_csv(DICT / 'seed.csv')   # [PATH CHANGE] was '/content/dictionaries/seed.csv'
+new_dict = pd.read_csv(DICT / 'seed2.csv')   # [PATH CHANGE] was '/content/bilibili_comment_scraper_webui/dictionaries/seed2.csv'
 
 old_dims = old_dict.groupby('dimension')['keyword'].apply(list).to_dict()
 new_dims = new_dict.groupby('dimension')['keyword'].apply(list).to_dict()
@@ -329,7 +337,7 @@ for bars in [bars1, bars2]:
         h = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2, h + 3, str(int(h)), ha='center', fontsize=10)
 plt.tight_layout()
-plt.savefig('/content/fig_dictionary_refinement.png', dpi=300)
+plt.savefig(FIG / 'data_revisement' / 'fig_class sizes_refinement (1).png', dpi=300)   # [PATH CHANGE] saves into the existing figure folder/file name in the repo
 plt.show()
 
 # Figure 2: F1
@@ -347,7 +355,7 @@ for bars in [bars1, bars2]:
         h = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2, h + 0.01, f'{h:.3f}', ha='center', fontsize=9)
 plt.tight_layout()
-plt.savefig('/content/fig_f1_refinement.png', dpi=300)
+plt.savefig(FIG / 'data_revisement' / 'fig_f1_refinement (1).png', dpi=300)   # [PATH CHANGE] saves into the existing figure folder/file name in the repo
 plt.show()
 
 #Expand sample amount
@@ -413,10 +421,10 @@ async def main():
             print(f"× {bv} failed: {e}")
     
     df = pd.DataFrame(all_data)
-    df.to_csv('/content/bilibili_comments_expanded.csv', index=False, encoding='utf-8-sig')
+    df.to_csv(DATA / 'bilibili_comments_expanded.csv', index=False, encoding='utf-8-sig')   # [PATH CHANGE] was '/content/bilibili_comments_expanded.csv'
     print(f"\n===== DONE =====")
     print(f"Total comments: {len(df)}")
-    print(f"Saved to: /content/bilibili_comments_expanded.csv")
+    print(f"Saved to: bilibili/data/bilibili_comments_expanded.csv")   # [PATH CHANGE] was "Saved to: /content/bilibili_comments_expanded.csv"
 
 await main()
 
@@ -425,7 +433,7 @@ import pandas as pd
 import jieba
 import re
 
-df = pd.read_csv('/content/bilibili_comments_expanded.csv')
+df = pd.read_csv(DATA / 'bilibili_expanded_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_expanded.csv'. The raw expanded file is not in the repo; re-cleaning the saved clean file gives the same result
 print(f"Raw expanded: {len(df)}")
 
 # Clean
@@ -464,7 +472,7 @@ def tokenize(text):
 
 df['tokens'] = df['content'].apply(tokenize)
 
-df.to_csv('/content/bilibili_expanded_clean.csv', index=False, encoding='utf-8-sig')
+df.to_csv(DATA / 'bilibili_expanded_clean.csv', index=False, encoding='utf-8-sig')   # [PATH CHANGE] was '/content/bilibili_expanded_clean.csv'
 print(f"\nSaved: {len(df)} comments")
 print(df['video_label'].value_counts())
 
@@ -472,12 +480,12 @@ print(df['video_label'].value_counts())
 import pandas as pd
 
 # Load expanded clean data
-df = pd.read_csv('/content/bilibili_expanded_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_expanded_clean.csv')   # [PATH CHANGE] was '/content/bilibili_expanded_clean.csv'
 print(f"Loaded: {len(df)}")
 print(f"Columns: {df.columns.tolist()}")
 
 # Apply refined dictionary
-new_dict = pd.read_csv('/content/bilibili_comment_scraper_webui/dictionaries/seed2.csv')
+new_dict = pd.read_csv(DICT / 'seed2.csv')   # [PATH CHANGE] was '/content/bilibili_comment_scraper_webui/dictionaries/seed2.csv'
 new_dims = new_dict.groupby('dimension')['keyword'].apply(list).to_dict()
 
 # Label
@@ -486,7 +494,7 @@ for dim, words in new_dims.items():
     print(f"{dim}: {df[dim].sum()} ({df[dim].mean()*100:.1f}%)")
 
 # Save
-df.to_csv('/content/bilibili_expanded_labeled.csv', index=False, encoding='utf-8-sig')
+df.to_csv(DATA / 'bilibili_expanded_labeled.csv', index=False, encoding='utf-8-sig')   # [PATH CHANGE] was '/content/bilibili_expanded_labeled.csv'
 print(f"\nSaved: {len(df)}")
 
 #Compare two verisons of sample with new dictionary
@@ -498,14 +506,14 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 
 # Load refined dictionary
-new_dict = pd.read_csv('/content/bilibili_comment_scraper_webui/dictionaries/seed2.csv')
+new_dict = pd.read_csv(DICT / 'seed2.csv')   # [PATH CHANGE] was '/content/bilibili_comment_scraper_webui/dictionaries/seed2.csv'
 new_dims = new_dict.groupby('dimension')['keyword'].apply(list).to_dict()
 
 dim_order = ['genuine_attachment', 'emotional_substitution',
              'playful_performance', 'dangerous_dependence']
 
 # Original sample (860)
-df_old = pd.read_csv('/content/bilibili_comments_with_tokens.csv')
+df_old = pd.read_csv(DATA / 'bilibili_comments_with_tokens.csv')   # [PATH CHANGE] was '/content/bilibili_comments_with_tokens.csv'
 df_old['tokens'] = df_old['tokens'].fillna('')
 
 old_n = []
@@ -535,7 +543,7 @@ print("  n =", old_n)
 print("  F1 =", [f"{x:.3f}" for x in old_f1])
 
 # Expanded sample (2302)
-df_new = pd.read_csv('/content/bilibili_expanded_labeled.csv')
+df_new = pd.read_csv(DATA / 'bilibili_expanded_labeled.csv')   # [PATH CHANGE] was '/content/bilibili_expanded_labeled.csv'
 df_new['tokens'] = df_new['tokens'].fillna('')
 
 new_n = []
@@ -598,7 +606,7 @@ for i, (a, b) in enumerate(zip(old_f1, new_f1)):
     axes[1].text(i + width/2, b + 0.01, f'{b:.2f}', ha='center', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('/content/fig_expansion_diagnostic.png', dpi=300)
+plt.savefig(FIG / 'data_revisement' / 'fig_expansion_diagnostic.png', dpi=300)   # [PATH CHANGE] saves into the existing figure folder/file name in the repo
 plt.show()
 
 
@@ -609,7 +617,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
-df = pd.read_csv('/content/bilibili_expanded_labeled.csv')
+df = pd.read_csv(DATA / 'bilibili_expanded_labeled.csv')   # [PATH CHANGE] was '/content/bilibili_expanded_labeled.csv'
 df['tokens'] = df['tokens'].fillna('')
 print(f"Loaded: {len(df)}")
 
@@ -638,7 +646,7 @@ for c in range(4):
     print(f"  {', '.join(top_words)}")
 
 # Save for later
-df.to_csv('/content/bilibili_expanded_clustered.csv', index=False, encoding='utf-8-sig')
+df.to_csv(DATA / 'bilibili_expanded_clustered.csv', index=False, encoding='utf-8-sig')   # [PATH CHANGE] was '/content/bilibili_expanded_clustered.csv'
 print("\nSaved to bilibili_expanded_clustered.csv")
 
 #Identify K-means pattern
@@ -674,7 +682,7 @@ for k, s in zip(k_values, sil_scores):
     ax.text(k, s + 0.003, f'{s:.3f}', ha='center', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('/content/fig_silhouette_by_k.png', dpi=300)
+plt.savefig(FIG / 'data_revisement' / 'fig_silhouette_by_k.png', dpi=300)   # [PATH CHANGE] saves into the existing figure folder/file name in the repo
 plt.show()
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -684,7 +692,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold, cross_val_score
 
 # Load the labeled expanded sample
-df = pd.read_csv('/content/bilibili_expanded_labeled.csv')
+df = pd.read_csv(DATA / 'bilibili_expanded_labeled.csv')   # [PATH CHANGE] was '/content/bilibili_expanded_labeled.csv'
 df['tokens'] = df['tokens'].fillna('')
 print(f"Loaded: {len(df)}")
 print(f"Columns: {df.columns.tolist()}")
@@ -731,6 +739,3 @@ for name, model in models.items():
         y = df[dim].astype(int)
         f1 = cross_val_score(model, X_count, y, cv=kfold, scoring='f1').mean()
         print(f"  {dim}: F1={f1:.3f}")
-
-
-

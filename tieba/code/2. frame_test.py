@@ -7,7 +7,7 @@ import requests
 from statsmodels.stats.proportion import proportions_ztest
  
 TIEBA = Path(__file__).resolve().parents[1]
-DATA, FIGURES = TIEBA / "data", TIEBA / "figures"
+DATA, FIGURES = TIEBA / "data", TIEBA / "figure"
 for folder in (DATA, FIGURES):
     folder.mkdir(parents=True, exist_ok=True)
  

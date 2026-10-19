@@ -1,3 +1,10 @@
+# ---------- ADDED: paths point to the folders in our repository instead of Colab's /content/ ----------
+# Run from the repository root (in Colab: clone our repo first, then %cd into it).
+from pathlib import Path
+BILI = Path(__file__).resolve().parents[1] if "__file__" in globals() else (Path.cwd() / "bilibili").resolve()
+ROOT = BILI.parent                                   # repository root
+DATA, FIG, DICT = BILI / "data", BILI / "figure", ROOT / "dictionaries"
+
 # Colone the repo
 !git clone https://github.com/ManiaAmaeOvo/bilibili_comment_scraper_webui
 %cd bilibili_comment_scraper_webui
@@ -73,17 +80,17 @@ async def main():
 
     df = pd.DataFrame(all_data)
     # Use ABSOLUTE path so it's easy to find
-    df.to_csv('/content/bilibili_comments.csv', index=False, encoding='utf-8-sig')
+    df.to_csv(DATA / 'bilibili_comments.csv', index=False, encoding='utf-8-sig')  # CHANGED: was '/content/bilibili_comments.csv'
     print(f"\n===== DONE =====")
     print(f"Total comments: {len(df)}")
-    print(f"Saved to: /content/bilibili_comments.csv")
+    print(f"Saved to: bilibili/data/bilibili_comments.csv")  # CHANGED: message
 
 await main()
 
 import pandas as pd
 
 #  Load the combined comments CSV
-df = pd.read_csv('/content/bilibili_comments.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled.csv')  # CHANGED: was '/content/bilibili_comments.csv'. The raw file is not in the repo; the labeled file has the same 900 comments plus a video_label column
 
 # Map each BV number to a human-readable label
 label_map = {
@@ -101,8 +108,8 @@ print(df['video_label'].value_counts())
 print()
 
 # Save the relabeled CSV
-df.to_csv('/content/bilibili_comments_labeled.csv', index=False, encoding='utf-8-sig')
-print("Saved to /content/bilibili_comments_labeled.csv")
+df.to_csv(DATA / 'bilibili_comments_labeled.csv', index=False, encoding='utf-8-sig')  # CHANGED: was '/content/bilibili_comments_labeled.csv'
+print("Saved to bilibili/data/bilibili_comments_labeled.csv")  # CHANGED: message
 print(f"Total rows: {len(df)}")
 
 # Preview
@@ -113,7 +120,7 @@ import os
 import pandas as pd
 
 # 1. Create directory
-os.makedirs('dictionaries', exist_ok=True)
+os.makedirs(DICT, exist_ok=True)  # CHANGED: was 'dictionaries'
 
 # 2. Dictionary
 # NOTE: keyword has 23 items, so every other list must also have 23 items.
@@ -147,14 +154,14 @@ data = {
 
 # 3. Save
 df = pd.DataFrame(data)
-df.to_csv('dictionaries/seed.csv', index=False, encoding='utf-8-sig')
+df.to_csv(DICT / 'seed.csv', index=False, encoding='utf-8-sig')  # CHANGED: was 'dictionaries/seed.csv'
 
 import pandas as pd
 import matplotlib.pyplot as plt
 
 #  Load both CSV files using their actual paths
-df = pd.read_csv('/content/bilibili_comments.csv')
-dictionary = pd.read_csv('/content/dictionaries/seed.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled.csv')  # CHANGED: was '/content/bilibili_comments.csv'. The raw file is not in the repo; the labeled file has the same 900 comments plus a video_label column
+dictionary = pd.read_csv(DICT / 'seed.csv')  # CHANGED: was '/content/dictionaries/seed.csv'
 
 # Print basic info about both datasets
 print(f"Number of comments: {len(df)}")
@@ -176,7 +183,7 @@ for i, c in enumerate(df['content'].sample(20, random_state=42).tolist(), 1):
 mport pandas as pd
 
 #  Load the combined comments CSV
-df = pd.read_csv('/content/bilibili_comments.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled.csv')  # CHANGED: was '/content/bilibili_comments.csv'. The raw file is not in the repo; the labeled file has the same 900 comments plus a video_label column
 
 # Map each BV number to a human-readable label
 label_map = {
@@ -194,8 +201,8 @@ print(df['video_label'].value_counts())
 print()
 
 # Save the relabeled CSV
-df.to_csv('/content/bilibili_comments_labeled.csv', index=False, encoding='utf-8-sig')
-print("Saved to /content/bilibili_comments_labeled.csv")
+df.to_csv(DATA / 'bilibili_comments_labeled.csv', index=False, encoding='utf-8-sig')  # CHANGED: was '/content/bilibili_comments_labeled.csv'
+print("Saved to bilibili/data/bilibili_comments_labeled.csv")  # CHANGED: message
 print(f"Total rows: {len(df)}")
 
 # Preview
@@ -206,7 +213,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the raw comments scraped from Bilibili
-df = pd.read_csv('/content/bilibili_comments.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled.csv')  # CHANGED: was '/content/bilibili_comments.csv'. The raw file is not in the repo; the labeled file has the same 900 comments plus a video_label column
 print(f"Raw comments: {len(df)}")
 
 # Remove duplicate comments to avoid over-representing viral phrases
@@ -222,7 +229,7 @@ df = df[df['content'].str.contains(r'[\u4e00-\u9fff]', na=False)]
 print(f"After language filter: {len(df)}")
 
 # Load the seed dictionary that maps each framing dimension to its keywords
-dictionary = pd.read_csv('/content/dictionaries/seed.csv')
+dictionary = pd.read_csv(DICT / 'seed.csv')  # CHANGED: was '/content/dictionaries/seed.csv'
 
 # Group keywords by dimension to get a dict like {'genuine_attachment': ['爱', '心动', ...], ...}
 dims = dictionary.groupby('dimension')['keyword'].apply(list).to_dict()
@@ -251,7 +258,7 @@ matched_any = df[list(dims.keys())].any(axis=1).sum()
 print(f"Comments matching at least one dimension: {matched_any}")
 
 # Save the cleaned AND labeled corpus to a new CSV
-df.to_csv('/content/bilibili_comments_labeled_clean.csv', index=False, encoding='utf-8-sig')
+df.to_csv(DATA / 'bilibili_comments_labeled_clean.csv', index=False, encoding='utf-8-sig')  # CHANGED: was '/content/bilibili_comments_labeled_clean.csv'
 
 
 # Preview: show comment text and the matched keywords for each dimension
@@ -276,5 +283,5 @@ for bar, pct in zip(bars, pcts):
             f'{pct:.1f}%', ha='center', fontsize=11)
 
 plt.tight_layout()
-plt.savefig('/content/fig1_dimension_distribution.png', dpi=300)
+plt.savefig(FIG / 'fig1_dimension_distribution.png', dpi=300)  # CHANGED: was '/content/fig1_dimension_distribution.png'
 plt.show()

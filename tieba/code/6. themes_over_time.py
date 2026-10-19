@@ -6,7 +6,7 @@ import pandas as pd
  
 # ---------- folders (relative to the tieba/ folder of the repository) ----------
 TIEBA = Path(__file__).resolve().parents[1]
-DATA, FIGURES = TIEBA / "data", TIEBA / "figures"
+DATA, FIGURES = TIEBA / "data", TIEBA / "figure"
 FIGURES.mkdir(parents=True, exist_ok=True)
 plt.rcParams["font.sans-serif"] = ["Arial Unicode MS", "PingFang SC", "Noto Sans CJK SC", "SimHei"]
  
