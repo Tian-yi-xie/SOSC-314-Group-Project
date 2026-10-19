@@ -1,3 +1,7 @@
+from pathlib import Path
+BILI = Path(__file__).resolve().parents[1] if "__file__" in globals() else (Path.cwd() / "bilibili").resolve()
+DATA, FIG = BILI / "data", BILI / "figure"
+
 #Preprocessing: tokenize Chinese comments with jieba, remove stopwords, 
 #and keep only multi-character Chinese words for downstream vectorization (CountVectorizer / TfidfVectorizer) and classification.
 
@@ -6,7 +10,7 @@ import jieba
 import re
 
 # Load the labeled data
-df = pd.read_csv('/content/bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')
 print(f"Loaded: {len(df)} comments")
 print(f"Columns: {df.columns.tolist()}")
 
@@ -48,7 +52,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 
 # Load data
-df = pd.read_csv('/content/bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')
 
 # Tokenize if not present
 if 'tokens' not in df.columns:
@@ -113,5 +117,5 @@ for bars in [bars1, bars2]:
                 f'{h:.3f}', ha='center', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('/content/fig_representation_comparison.png', dpi=300)
+plt.savefig(FIG / 'fig_representation_comparison.png', dpi=300)
 plt.show()
