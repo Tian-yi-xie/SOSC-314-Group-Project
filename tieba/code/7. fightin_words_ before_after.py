@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 from matplotlib.colors import to_rgba
 from sklearn.feature_extraction.text import CountVectorizer
-# [FIX] stopword loader built in (was "from utils import load_stopwords"; utils.py is not in the repo)
 import json
 import requests
 
