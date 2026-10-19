@@ -1,8 +1,9 @@
+# ---------- [PATH CHANGE] paths: point to the folders in our repository instead of Colab's /content/ ----------
 from pathlib import Path
 BILI = Path(__file__).resolve().parents[1] if "__file__" in globals() else (Path.cwd() / "bilibili").resolve()
 DATA, FIG = BILI / "data", BILI / "figure"
 
-#Preprocessing: tokenize Chinese comments with jieba, remove stopwords, 
+#Preprocessing: tokenize Chinese comments with jieba, remove stopwords,
 #and keep only multi-character Chinese words for downstream vectorization (CountVectorizer / TfidfVectorizer) and classification.
 
 import pandas as pd
@@ -10,7 +11,7 @@ import jieba
 import re
 
 # Load the labeled data
-df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_labeled_clean.csv'
 print(f"Loaded: {len(df)} comments")
 print(f"Columns: {df.columns.tolist()}")
 
@@ -52,13 +53,13 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 
 # Load data
-df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')
+df = pd.read_csv(DATA / 'bilibili_comments_labeled_clean.csv')   # [PATH CHANGE] was '/content/bilibili_comments_labeled_clean.csv'
 
 # Tokenize if not present
 if 'tokens' not in df.columns:
     stopwords = set(['的','了','是','在','我','你','他','她','它','这','那','就','都','也','和'])
     def tokenize(text):
-        text = re.sub(r'[^\u4e00-\u9fff]', ' ', str(text))
+        text = re.sub(r'[^一-鿿]', ' ', str(text))
         return ' '.join([w for w in jieba.cut(text) if w not in stopwords and len(w) > 1])
     df['tokens'] = df['content'].apply(tokenize)
 
@@ -78,11 +79,11 @@ tfidf_f1 = []
 
 for dim in dims:
     y = df[dim].astype(int)
-    
+
     clf_c = LogisticRegression(max_iter=1000, class_weight='balanced')
     f1_c = cross_val_score(clf_c, X_count, y, cv=5, scoring='f1').mean()
     count_f1.append(f1_c)
-    
+
     clf_t = LogisticRegression(max_iter=1000, class_weight='balanced')
     f1_t = cross_val_score(clf_t, X_tfidf, y, cv=5, scoring='f1').mean()
     tfidf_f1.append(f1_t)
@@ -117,5 +118,5 @@ for bars in [bars1, bars2]:
                 f'{h:.3f}', ha='center', fontsize=9)
 
 plt.tight_layout()
-plt.savefig(FIG / 'fig_representation_comparison.png', dpi=300)
+plt.savefig(FIG / 'fig3_representation_comparison.png', dpi=300)   # [PATH CHANGE] saves into the existing figure folder/file name in the repo
 plt.show()
