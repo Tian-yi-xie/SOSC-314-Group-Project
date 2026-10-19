@@ -1,0 +1,32 @@
+# Python 3.10 or newer (write the exact version you ran, e.g. "# Python 3.11.9 (tested)")
+# Minimum versions. Before submitting, replace ">=" with "==" using the versions shown by `pip list`
+# in the environment where you ran the scripts (for Bilibili: your Colab session).
+# Install the whole project with:  pip install -r requirements.txt
+ 
+# --- analysis, all scripts ---
+pandas>=2.0                  # tables
+numpy>=1.24
+scipy>=1.10                  # hierarchical clustering of cluster centroids (tieba/05)
+scikit-learn>=1.3            # classifiers, vectorizers, k-means, nearest neighbours, cosine similarity
+statsmodels>=0.14            # two-proportion z-test (tieba/02)
+matplotlib>=3.7              # all figures
+openpyxl>=3.1                # reading and writing .xlsx files
+jieba>=0.42.1                # Chinese word segmentation
+ 
+# --- Tieba embeddings and clustering (tieba/03, 04) ---
+sentence-transformers>=2.7   # BGE-small-zh-v1.5 sentence embeddings (installs PyTorch, large download)
+umap-learn>=0.5.5            # dimension reduction
+hdbscan>=0.8.40              # density-based clustering
+ 
+# --- data collection (not needed to reproduce the results from the published files) ---
+requests>=2.31               # Tieba API, stopword list download
+playwright>=1.40             # Tieba search in a browser; then run: python -m playwright install chromium
+bilibili-api-python>=16.2    # Bilibili comments (bilibili/01)
+aiohttp>=3.9                 # used by bilibili-api-python
+ 
+# --- report: notebook and HTML conversion ---
+jupyter>=1.0
+nbconvert>=7.0
+ 
+# Also needed, but not installed with pip:
+#   git  (tieba/07 clones github.com/jmhessel/FightingWords, the Fightin' Words implementation, on first run)
